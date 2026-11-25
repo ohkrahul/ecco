@@ -43,6 +43,7 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 [data-theme="dark"] .lede { color: var(--on-dark-muted); }
 [data-theme="dark"]::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.08; mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.slide[inert] * { animation-play-state: paused; } /* off-screen slides: no looping CSS work */
 .chapter-num { position: absolute; right: var(--gutter); bottom: -0.14em; font-size: clamp(150px, 20vw, 360px); font-weight: 800; letter-spacing: -0.06em; line-height: 1; color: transparent; -webkit-text-stroke: 2px var(--sage); opacity: 0.22; pointer-events: none; }
 
 /* ---------- 3D stage --------------------------------------------------------- */
@@ -87,35 +88,63 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .hero-title { position: absolute; left: 0; right: 0; top: 15vh; z-index: 1; font-size: var(--fs-hero); line-height: 0.86; letter-spacing: -0.05em; text-align: center; white-space: nowrap; }
 .hero-sub { position: absolute; left: 50%; bottom: 8vh; transform: translateX(-50%); white-space: nowrap; }
 
-/* ---------- 2 Brief ------------------------------------------------------------ */
-.brief { flex-direction: row; align-items: center; gap: 5vw; }
-.brief-left { flex: 1.15; display: grid; gap: 2.6vh; }
-.brief-right { flex: 1; display: grid; gap: 3vh; }
-.channels { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; }
-.channels li { padding: 12px 20px; border-radius: 999px; border: 1px solid var(--line); background: var(--cloud); font-weight: 700; font-size: clamp(14px, 1.15vw, 19px); }
-.channels li:first-child { background: var(--sage); border-color: var(--sage); color: #fff; }
-.goals { list-style: none; display: grid; gap: 1.2vh; }
-.goals li { display: grid; grid-template-columns: 130px 1fr; align-items: baseline; gap: 16px; background: var(--cloud); border-radius: var(--radius); padding: 2.2vh 24px; }
-.goals strong { font-size: clamp(18px, 1.6vw, 28px); letter-spacing: -0.02em; line-height: 1.15; }
-.ages { display: grid; gap: 1.2vh; }
-.age-axis { display: flex; gap: 8px; height: 10vh; min-height: 72px; }
-.age-band { border-radius: 16px; padding: 12px 20px; display: flex; flex-direction: column; justify-content: center; transform-origin: 0 50%; }
-.age-band strong { font-size: clamp(24px, 2.4vw, 42px); line-height: 1; letter-spacing: -0.035em; }
-.age-band span { font-size: 12px; opacity: 0.85; }
-.band-acq { flex: 12; background: var(--sage); color: #fff; }
-.band-core { flex: 25; background: var(--ink); color: var(--paper); }
+/* ---------- 2 Business objective ------------------------------------------------ */
+.objective { flex-direction: row; align-items: center; gap: 4vw; }
+.obj-copy { flex: 1; display: grid; gap: 2.6vh; }
+.roots { display: grid; gap: 1.2vh; margin-top: 1vh; }
+.roots ol { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.roots li { display: grid; gap: 6px; align-content: start; background: var(--cloud); border-radius: var(--radius); padding: 2vh 16px; font-weight: 700; font-size: clamp(15px, 1.15vw, 19px); letter-spacing: -0.015em; line-height: 1.2; }
+.roots li span { font-size: 11px; font-weight: 600; letter-spacing: 0.2em; color: var(--sage); }
+/* The hub: one idea at the centre, a spoke to each channel. Nodes sit on a circle via CSS trig. */
+.hub { position: relative; flex: 0 0 auto; height: min(66vh, 42vw); aspect-ratio: 1; margin-right: 2vw; }
+.hub-core { position: absolute; inset: 35%; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-content: center; text-align: center; z-index: 2; }
+.hub-core strong { font-size: clamp(28px, 3vw, 52px); letter-spacing: -0.04em; line-height: 1; }
+.hub-core .label { color: var(--sage-light) !important; }
+.hub-core::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid var(--sage); animation: hub-pulse 2.8s var(--ease) infinite; pointer-events: none; }
+@keyframes hub-pulse { from { transform: scale(1); opacity: 0.8; } to { transform: scale(2.3); opacity: 0; } }
+.spoke { position: absolute; left: 50%; top: 50%; width: 38%; height: 1.5px; transform-origin: 0 50%; transform: rotate(var(--a)); }
+.spoke i { position: absolute; inset: 0; background: rgba(79, 138, 91, 0.35); transform-origin: 0 50%; }
+/* the idea travelling out to every channel at once */
+.spoke i::after { content: ""; position: absolute; top: -3px; left: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--sage); opacity: 0; animation: hub-signal 2.8s ease-in infinite; }
+@keyframes hub-signal { 0% { left: 22%; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: 88%; opacity: 0; } }
+.node { position: absolute; left: calc(50% + cos(var(--a)) * 38%); top: calc(50% + sin(var(--a)) * 38%); transform: translate(-50%, -50%); z-index: 1; }
+.node b { display: block; padding: 10px 18px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); box-shadow: 0 14px 30px rgba(19, 32, 26, 0.08); font-size: clamp(13px, 1vw, 17px); font-weight: 700; white-space: nowrap; text-align: center; }
+.node-lead b { padding: 12px 28px; background: var(--sage); border-color: var(--sage); color: #fff; font-size: clamp(17px, 1.35vw, 23px); box-shadow: 0 18px 40px rgba(79, 138, 91, 0.32); }
+.node-lead small { display: block; font-size: 9px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.85; }
+
+/* ---------- 3 Pitch expectation ------------------------------------------------ */
+.expectation { gap: 3.6vh; }
+.expectation h2 { font-size: clamp(56px, 7.4vw, 136px); }
+.aware { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.aware li { position: relative; display: grid; gap: 1.4vh; align-content: start; padding: 2.8vh 26px 3.2vh; border-radius: var(--radius); background: var(--paper); }
+.aware li:nth-child(2) { background: rgba(79, 138, 91, 0.18); }
+.aware li:nth-child(3) { background: var(--sage); color: #fff; }
+.aware li:nth-child(3) .label { color: rgba(255, 255, 255, 0.85) !important; }
+.aware strong { font-size: clamp(20px, 1.9vw, 34px); letter-spacing: -0.025em; line-height: 1.1; }
+.aware li + li::before { content: "→"; position: absolute; left: -23px; top: 50%; z-index: 1; width: 32px; height: 32px; margin-top: -16px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--paper); font-size: 15px; }
+.gen { display: grid; gap: 1.4vh; }
+.gen-title { font-size: clamp(20px, 1.9vw, 32px); font-weight: 800; letter-spacing: -0.025em; }
+.axis { display: flex; gap: 6px; height: 12vh; min-height: 80px; }
+.band { border-radius: 16px; padding: 12px 24px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+.band strong { font-size: clamp(28px, 3vw, 54px); line-height: 1; letter-spacing: -0.04em; }
+.band span { font-size: 13px; font-weight: 600; opacity: 0.85; }
+.band-acq { flex: 12; background: var(--sage); color: #fff; transform-origin: 100% 50%; } /* grows leftwards: ECCO reaching younger */
+.band-core { flex: 25; background: var(--ink); color: var(--paper); transform-origin: 0 50%; }
 
 /* ---------- 3 Brand ------------------------------------------------------------ */
-.brand { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto; gap: 3vh 5vw; align-items: center; }
+.brand { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 1fr auto; gap: 3vh 4vw; align-items: center; }
 .brand-copy { display: grid; gap: 2vh; }
 .brand-copy .lede strong { color: var(--ink); }
-.brand-ads { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.brand-ads .ad-wide { grid-column: 1 / -1; }
-.brand-ads .frame { box-shadow: 0 20px 44px rgba(19, 32, 26, 0.14); background: var(--cloud); }
-.brand-ads .ad-wide .frame { aspect-ratio: 853 / 361; max-height: 26vh; }
-.brand-ads figure:not(.ad-wide) .frame { height: 20vh; }
-.brand-ads figure:not(.ad-wide) img { object-fit: contain; }
-.shelf { grid-column: 1 / -1; display: flex; gap: 2vw; align-items: flex-end; padding-top: 2.4vh; border-top: 1px solid var(--line); }
+/* ECCO's ads on a dark card (like deck slide 5). The source files are small (264–853 px), so they're shown
+   at or below their real size, each at its own aspect ratio: the three posters share one row height
+   (flex-grow = aspect ratio), the wide banner sits underneath. Nothing is cropped or letterboxed. */
+.brand-ads { grid-column: 2; grid-row: 1 / -1; width: min(46vw, 78vh); display: grid; gap: 12px; padding: clamp(18px, 1.8vw, 30px); border-radius: var(--radius); background: var(--forest); box-shadow: 0 40px 80px rgba(19, 32, 26, 0.22); }
+.brand-ads .label { color: var(--sage-light) !important; margin-bottom: 4px; }
+.ad-row { display: flex; gap: 12px; }
+.ad-row figure { flex: calc(var(--r)) 1 0; min-width: 0; aspect-ratio: var(--r); }
+.brand-ads img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+.ad-hero { aspect-ratio: 853 / 361; }
+.shelf { grid-column: 1; display: flex; gap: 2vw; align-items: flex-end; padding-top: 2.4vh; border-top: 1px solid var(--line); }
 .shelf figure { flex: 1; text-align: center; }
 .shelf img { width: 100%; height: 11vh; object-fit: contain; filter: drop-shadow(0 12px 12px rgba(19, 32, 26, 0.14)); transition: transform 0.7s var(--ease); }
 .shelf figure:hover img { transform: translateY(-8px) rotate(-4deg); }
@@ -346,14 +375,6 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .owner-card > div { display: grid; gap: 1.4vh; }
 .owner-card h3 { font-size: clamp(22px, 2vw, 36px); }
 .owner-card p:not(.chip) { color: var(--muted); }
-
-/* ---------- 22 Compare ------------------------------------------------------------------------------------ */
-.compare-table { width: 100%; border-collapse: collapse; font-size: clamp(14px, 1.05vw, 17px); }
-.compare-table th, .compare-table td { text-align: left; vertical-align: top; padding: 1.5vh 16px; border-bottom: 1px solid var(--line); }
-.compare-table thead th { font-size: clamp(18px, 1.6vw, 26px); font-weight: 800; letter-spacing: -0.02em; border-bottom: 2px solid var(--ink); }
-.compare-table thead .chip { margin-right: 10px; vertical-align: middle; font-size: 10px; }
-.compare-table tbody th { width: 16%; font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
-.compare-table td { width: 42%; font-weight: 600; }
 
 /* ---------- 23 Finale --------------------------------------------------------------------------------------- */
 .finale-title { position: absolute; left: 0; right: 0; top: 15vh; z-index: 1; font-size: var(--fs-hero); line-height: 0.86; letter-spacing: -0.05em; text-align: center; white-space: nowrap; }

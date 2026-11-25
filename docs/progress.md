@@ -54,3 +54,10 @@ Ruling: deleting the 8 dead scroll-era files was refused by the permission class
 Ruling: repo root = D:\ecco; .gitignore keeps out the .pptx and raw ecco-site-assets/; vercel.json builds microsite/.
 Round 4: complete — `npm run smoke` → SMOKE PASS (1440 + 1920: 26 stops / 23 slides, back through builds, nav, wheel gesture, film dialog, F5, ?nowebgl, reduced motion); perf p50 16.7 ms, p95 16.8 ms.
 Ruling: published per user — GitHub ohkrahul/ecco (public, user chose "push as is" after the confidentiality warning); Vercel project ecco-walk-your-walk, Git-connected (push to main = production deploy). ecco.vercel.app is owned by another account → https://ecco-india.vercel.app added as the project domain.
+
+## v1.1 — slide-by-slide revisions with the user (local only until the user approves; no push)
+Ruling: v1.1 step 1 — "The brief" split into deck slide 2 (Business objective: one-idea hub, digital leads, 7 channels, 4 roots) and deck slide 3 (Pitch expectation: Awareness. recognise → understand → experience, 18–30 band grows leftwards from the 30–55 core); deck wording kept ("know where to experience it") — now 24 slides. SMOKE PASS 1440 + 1920 (27 stops).
+Ruling: off-screen (inert) slides pause their CSS loops — cost if wrong: none.
+Ruling: v1.1 step 2 — Key USPs (3D x-ray shoe) now opens the brand chapter before the brand story (user: "show the 05 before the 04"); badges renumbered so they stay in order: shoe = 04 (like deck 4's shoe divider), brand story = 05. Header "The brand" → #shoe.
+Ruling: v1.1 step 3 — slide 5 ads: the deck's ad files are tiny (264–853 px; no larger originals in the .pptx), so they sit on a dark card at ≤ native size, three posters in one justified row at their own aspect ratios (flex-grow = ratio), the Walk Your Walk banner full width below — no letterboxing or cropping.
+Ruling: v1.1 step 4 — "Two routes · One brief" comparison slide removed (user), with its "The choice" header link → 23 slides. SMOKE PASS 1440 + 1920 (26 stops). Pushed on the user's go-ahead.

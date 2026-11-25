@@ -7,17 +7,30 @@ import { placeFootprints } from '../footprints.js';
  * these add each slide's own moment.
  */
 export function init() {
-  const random = gsap.utils.random;
-
-  // 2 · the channels arrive scattered, then line up as one idea; the age bands grow along the axis
-  slide('brief', (tl, el) => {
-    tl.from(el.querySelectorAll('.channels li'), { x: () => random(-320, 320), y: () => random(-180, 180), rotation: () => random(-25, 25), opacity: 0, duration: 1.5, ease: 'expo.out', stagger: 0.06 }, 0.4)
-      .from(el.querySelectorAll('.age-band'), { scaleX: 0, duration: 1.4, ease: 'expo.out', stagger: 0.25 }, 1);
+  // 2 · one idea reaches every channel: spokes draw out from the core, channels light up (digital first)
+  slide('objective', (tl, el) => {
+    tl.from(el.querySelector('.hub-core'), { scale: 0, duration: 1, ease: 'back.out(1.6)' }, 0.3)
+      .from(el.querySelectorAll('.spoke i'), { scaleX: 0, duration: 0.7, ease: 'power2.out', stagger: 0.09 }, 0.7)
+      .from(el.querySelectorAll('.node b'), { scale: 0.6, opacity: 0, duration: 0.7, ease: 'back.out(1.8)', stagger: 0.09 }, 0.95)
+      .from(el.querySelectorAll('.roots li'), { y: 24, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08 }, 1.1);
   });
 
-  // 3 · ECCO's products line up on the shelf
+  // 3 · recognise → understand → experience, then the audience: core buyers first, then ECCO reaches younger
+  slide('expectation', (tl, el) => {
+    const [acq, core] = el.querySelectorAll('.band');
+    tl.from(el.querySelectorAll('.aware li'), { y: 50, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.2 }, 0.5)
+      .from(el.querySelector('.gen-title'), { y: 24, opacity: 0, duration: 0.8, ease: 'power3.out' }, 1.3)
+      .from(core, { scaleX: 0, duration: 1.1, ease: 'expo.out' }, 1.5)
+      .from(core.children, { opacity: 0, y: 10, duration: 0.5, stagger: 0.08 }, 1.9)
+      .from(acq, { scaleX: 0, duration: 1.1, ease: 'expo.out' }, 2.1)
+      .from(acq.children, { opacity: 0, y: 10, duration: 0.5, stagger: 0.08 }, 2.5);
+  });
+
+  // 5 · the ad card slides in and its posters drop into place; ECCO's products line up on the shelf
   slide('brand', (tl, el) => {
-    tl.from(el.querySelectorAll('.shelf figure'), { y: 60, opacity: 0, stagger: 0.08, duration: 1, ease: 'power3.out' }, 0.7);
+    tl.from(el.querySelector('.brand-ads'), { x: 80, opacity: 0, duration: 1.3, ease: 'expo.out' }, 0.2)
+      .from(el.querySelectorAll('.brand-ads figure'), { y: 40, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12 }, 0.5)
+      .from(el.querySelectorAll('.shelf figure'), { y: 60, opacity: 0, stagger: 0.08, duration: 1, ease: 'power3.out' }, 0.7);
   });
 
   // 6 · 40% / 55% count up

@@ -17,7 +17,7 @@ http://localhost:4173 full-screen (F11). Everything (fonts, 3D model, images, vi
 
 ### Presenting slide by slide (next to the deck)
 
-The microsite follows the deck **in the same order, one screen per slide**, plus three "campaign flow" slides that show
+The microsite follows the deck **in the same order, one screen per slide**, plus two "campaign flow" slides that show
 how each route runs as a launch: **23 slides**. One clicker press, key, mouse-wheel notch or trackpad swipe = one slide;
 each slide's animation plays by itself when it arrives. Three slides have a second click, like a PowerPoint build:
 **And ECCO?** on the category wall, the **manifesto** on the zone, and the **end frame** of The Unseen Hours.
@@ -29,8 +29,9 @@ so the microsite and the PPT stay in step; it shows automatically on localhost (
 | Deck slide | Microsite chapter |
 |---|---|
 | 1 | Opening — ECCO logo, Walk Your Walk., 3D shoe |
-| 2–3 | The brief — one idea, every channel · recognise / understand / experience · 18–30 & 30–55 |
-| 4–5 | The brand — understated confidence, ECCO's ads + products · five USPs on the 3D x-ray shoe |
+| 2 | Business objective — one idea at the hub, led by digital, out to every channel · rooted in heritage, craft, design, comfort |
+| 3 | Pitch expectation — Awareness: recognise → understand → experience · 18–30 acquisition & 30–55 core |
+| 4–5 | The brand — five USPs on the 3D x-ray shoe (opens the chapter) · understated confidence, ECCO's ads + products |
 | 6–7 | The category — "Everyone is shouting" · competitor wall that gets louder, then "And ECCO?" |
 | 8 | Audience — four insights, 40% / 55% |
 | 9 | The zone — Category × Brand × Consumer → Understated by Choice + manifesto |
@@ -39,7 +40,6 @@ so the microsite and the PPT stay in step; it shows automatically on localhost (
 | 17–24 | Route 02 — For those not in ECCO: OOH, shoe installations, traffic walk, One Pair. Everywhere., BookMyShow walks |
 | *flow* | **How Route 02 runs** — Seed → Launch → Prove → Try → Belong |
 | 25 | Owners' Club — both routes |
-| *flow* | **Two routes, one brief** — side-by-side comparison |
 | end | Thank you |
 
 **Desktop only** for the pitch (laptop / projector). Mobile layout is not maintained.

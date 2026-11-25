@@ -141,7 +141,7 @@ for (const width of WIDTHS) {
   if (s.id !== 'unseen-hours' || s.stop !== s.stops - 1) fail(`back: expected the Unseen Hours end frame, got ${s.id} ${s.stop + 1}`);
   await page.screenshot({ path: 'shots/back-unseen-end.png' });
 
-  for (const href of ['#brief', '#brand', '#zone', '#route-01', '#route-02', '#compare']) {
+  for (const href of ['#objective', '#shoe', '#zone', '#route-01', '#route-02']) {
     await page.click(`.nav a[href="${href}"]`);
     await settle(page);
     s = await state(page);
@@ -150,7 +150,7 @@ for (const width of WIDTHS) {
   }
 
   // One trackpad flick with a long inertia tail = exactly one step.
-  await go('brief');
+  await go('objective');
   await page.mouse.move(720, 450);
   const before = await state(page);
   for (let i = 0; i < 60; i++) {
