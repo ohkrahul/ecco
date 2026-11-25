@@ -105,6 +105,27 @@ for (const width of WIDTHS) {
   await page.close();
 }
 
+// Loading screen: the shoe's pattern drawing draws itself while it loads, then the x-ray scan turns it into the 3D shoe.
+{
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await page.goto(BASE + '/');
+  await page.waitForTimeout(1400);
+  const drawn = await page.evaluate(() => {
+    const o = document.querySelector('.bp-outline');
+    return o ? 1 - parseFloat(getComputedStyle(o).strokeDashoffset) / o.getTotalLength() : 0;
+  });
+  if (drawn < 0.2) fail(`loading: the drawing is only ${Math.round(drawn * 100)}% drawn after 1.4 s`);
+  await page.screenshot({ path: 'shots/preloader-drawing.png' });
+  await page.waitForSelector('#preloader.is-leaving', { timeout: 12000 });
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: 'shots/preloader-scan.png' });
+  await page.waitForSelector('html.is-ready', { timeout: 6000 });
+  await settle(page);
+  await page.screenshot({ path: 'shots/preloader-done.png' });
+  await checkSlide(page, 'after loading');
+  await page.close();
+}
+
 // Presenter controls: back steps through builds, header links, wheel gestures, F5 → slide 1.
 {
   const { page, errors } = await open(1440);

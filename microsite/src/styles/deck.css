@@ -6,6 +6,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { overflow: hidden; height: 100%; }
 html { -webkit-text-size-adjust: 100%; }
+html body { visibility: visible; } /* index.html hides the page until this stylesheet has loaded */
 body { font-family: var(--sans); font-size: var(--fs-body); line-height: 1.5; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
 img, video, svg, canvas { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
@@ -19,7 +20,6 @@ h3 { font-size: var(--fs-h3); letter-spacing: -0.02em; line-height: 1.15; font-w
 h2.serif { line-height: 0.95; }
 .label { font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; line-height: 1.6; }
 .label .num { display: inline-block; margin-right: 12px; padding: 2px 9px; border-radius: 999px; background: var(--ink); color: var(--paper); letter-spacing: 0.06em; }
-.line-mark { display: inline-block; width: 56px; height: 1px; background: currentColor; vertical-align: middle; margin-right: 20px; }
 .lede { font-size: var(--fs-lede); max-width: 52ch; color: var(--muted); }
 .frame { overflow: hidden; border-radius: var(--radius); background: var(--line); }
 .frame img { width: 100%; height: 100%; object-fit: cover; }
@@ -55,15 +55,27 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
   display: block; position: absolute; left: 50%; top: 56%; width: min(56vw, 700px); transform: translate(-50%, -50%); z-index: 2; }
 
 /* ---------- Preloader -------------------------------------------------------- */
-#preloader { position: fixed; inset: 0; z-index: 100; color: var(--ink); }
-.pl-half { position: absolute; left: 0; right: 0; height: 50.2%; background: var(--cloud); }
-.pl-top { top: 0; } .pl-bottom { bottom: 0; }
-.pl-line { position: absolute; left: 0; top: 50%; width: 100%; height: 1px; background: var(--ink); transform-origin: 0 50%; transform: scaleX(0); }
-.pl-label { position: absolute; left: var(--gutter); top: calc(50% - 34px); opacity: 0; }
-.pl-count { position: absolute; left: var(--gutter); bottom: calc(var(--gutter) - 0.1em); font-size: clamp(56px, 9vw, 140px); font-weight: 800; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+/* Same colour as slide 1, so when the background fades the shoe lands straight onto the opening slide. */
+/* Below the 3D canvas (z 5), so the landing shoe covers its own footprints and its shadow falls on them. */
+#preloader { position: fixed; inset: 0; z-index: 4; color: var(--ink); background: var(--cloud); }
+.pl-label { position: absolute; left: var(--gutter); top: calc(var(--header-h) / 2 - 8px); color: var(--muted); }
+.pl-line { position: absolute; left: var(--gutter); bottom: var(--gutter); font-style: italic; font-size: clamp(22px, 2vw, 34px); line-height: 1.1; }
+/* Blueprint loader — a pattern-paper grid and the traced drawing, in ink. */
+.pl-blueprint { position: absolute; inset: 0; }
+.bp-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(19, 32, 26, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 32, 26, 0.06) 1px, transparent 1px); background-size: 32px 32px; }
+.bp-draw { position: absolute; overflow: visible; fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; }
+.bp-outline { stroke-width: 2.6; }
+.bp-stitch { stroke: var(--sage); stroke-width: 2.2; stroke-dasharray: 7 9; }
+.bp-eyelet { stroke-width: 2.2; }
+.bp-note { stroke-width: 1.6; }
+.bp-note circle { fill: var(--ink); stroke: none; }
+.bp-note text { fill: var(--ink); stroke: none; font: 600 22px var(--sans); letter-spacing: 0.24em; text-transform: uppercase; }
+.bp-dim text { text-anchor: middle; fill: var(--muted); }
+
+.pl-count { position: absolute; right: var(--gutter); bottom: calc(var(--gutter) - 0.08em); font-size: clamp(40px, 4.4vw, 76px); font-weight: 800; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
 
 /* ---------- Header + HUD ------------------------------------------------------ */
-.site-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 50; display: flex; align-items: center; gap: 32px; padding: 0 var(--gutter); color: var(--ink); transition: color 0.5s; }
+.site-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 50; display: flex; align-items: center; gap: 32px; padding: 0 var(--gutter); color: var(--ink); transition: color 0.5s, opacity 0.8s; }
 .site-header.on-dark { color: var(--on-dark); }
 .logo-mark { display: block; width: 92px; aspect-ratio: 110 / 30; background: currentColor; -webkit-mask: url(/img/ecco-logo.svg) no-repeat center / contain; mask: url(/img/ecco-logo.svg) no-repeat center / contain; }
 .nav { display: flex; gap: 26px; margin: 0 auto; font-size: 13px; font-weight: 500; }

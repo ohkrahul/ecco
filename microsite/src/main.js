@@ -32,7 +32,7 @@ async function start() {
   if (!stage) document.documentElement.classList.add('no-webgl');
 
   for (const s of [hero, craft, category, zone, unseenHours, flow, onePair, finale, slides]) s.init({ stage });
-  deck.start(deck.reduced ? 0 : 1.6); // slide 1 plays as the preloader splits open (~1.6 s into its exit)
+  deck.start(deck.reduced ? 0 : preloader.introDelay); // slide 1's shoe arrives as the loading screen hands over
   await preloader.exit();
   document.documentElement.classList.add('is-ready'); // read by scripts/smoke.mjs
 }

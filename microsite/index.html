@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="is-loading">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,14 +8,14 @@
   <title>ECCO India — Walk Your Walk · Pitch</title>
   <meta name="description" content="ECCO India brand awareness campaign — Understated by Choice. Pitch microsite." />
   <link rel="preload" href="/models/shoe.glb" as="fetch" crossorigin />
-  <noscript><style>#preloader{display:none} html{overflow:auto}</style></noscript>
+  <!-- Until the stylesheet arrives (the dev server adds it late): a blank screen in slide 1's colour, never raw HTML. -->
+  <style>html{background:#edf2eb} body{visibility:hidden} .is-loading .site-header{opacity:0}</style>
+  <noscript><style>#preloader{display:none} html{overflow:auto} body{visibility:visible} .is-loading .site-header{opacity:1}</style></noscript>
 </head>
 <body>
   <div id="preloader" aria-hidden="true">
-    <div class="pl-half pl-top"></div>
-    <div class="pl-half pl-bottom"></div>
-    <div class="pl-line"></div>
-    <p class="pl-label label"><span class="line-mark"></span>Walk your walk.</p>
+    <p class="pl-label label">ECCO India · Walk Your Walk</p>
+    <p class="pl-line serif">Every pair starts as a drawing.</p>
     <p class="pl-count">00</p>
   </div>
 
