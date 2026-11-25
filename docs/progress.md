@@ -83,3 +83,4 @@ Final: minor (deferred): iPad swipe edge cases - pan after pinch-zoom, long-pres
 Final: minor (deferred, needs a real phone): the shoe may trail its slot by a frame during fast momentum scrolls.
 Final: minor (deferred): desktop windows < 900 px with classic scrollbars put the scroll-mode shoe ~8 px off centre.
 Final: Ruling: key-visual frames ~4% smaller at 1440x900 (32vw cap) - needed so the heading fits at 1024x768; unchanged at 1920 - cost if wrong: slightly smaller KVs on the pitch laptop.
+Ruling: user: on phones the zone, campaign flows and One Pair "take time to render" while scrolling - their entrances are presenter-paced (~5 s). Scroll mode now compresses every slide's entrance to <= 1.4 s (SCROLL_PLAY), except slide 1 (its pace is the loading-screen hand-off); the deck is unchanged - check-modes.mjs "shown within 1.6 s" RED (zone, flow-01, one-pair, flow-02) -> GREEN. Local only, not pushed.

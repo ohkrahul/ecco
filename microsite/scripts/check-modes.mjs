@@ -47,6 +47,20 @@ const opacities = (page, id) => page.evaluate((id) => [...document.querySelector
   await page.close();
 }
 
+// 1b · phone: a slide's content is fully shown within 1.6 s of scrolling to it (people scroll on; they don't wait).
+{
+  const page = await open({ width: 390, height: 844 }, true);
+  const parts = { zone: '.zone-core, .zone-manifesto', 'flow-01': '.phase', 'one-pair': '.op-stop, .op-product', 'flow-02': '.phase' };
+  for (const [id, sel] of Object.entries(parts)) {
+    await page.evaluate((id) => scrollTo(0, document.getElementById(id).offsetTop - innerHeight * 0.5), id);
+    await page.waitForTimeout(1600);
+    const slow = await page.evaluate(([id, sel]) => [...document.querySelectorAll(`#${id} :is(${sel})`)]
+      .map((el) => (getComputedStyle(el).visibility === 'hidden' ? 0 : +getComputedStyle(el).opacity)).filter((o) => o < 0.9).length, [id, sel]);
+    if (slow) fail(`phone #${id}: ${slow} part(s) still not shown 1.6 s after scrolling to it`);
+  }
+  await page.close();
+}
+
 // 2 · desktop: resize across the boundary (window snapped to half a 1440 screen) — no reload, still the deck.
 {
   const page = await open({ width: 1440, height: 900 }, false);

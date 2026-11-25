@@ -21,6 +21,7 @@ const main = document.querySelector('main');
 const slides = [...document.querySelectorAll('main > .slide')];
 const builds = new Map();
 const MOVE = 1.1; // seconds for the slide-to-slide glide
+const SCROLL_PLAY = 1.4; // seconds: on the scrolling page a slide's whole entrance is compressed to this (people scroll on)
 
 /** build(tl, el) → optional leave() run as the slide starts to go (pause video, fade the 3D shoe). */
 export const slide = (id, build) => builds.set(id, build);
@@ -132,7 +133,9 @@ function startScroll(delay) {
       if (b.started) continue;
       b.started = true;
       if (reduced) b.tl.progress(1);
-      else b.playing = b.tl.tweenTo(b.tl.duration(), { delay: e.target === slides[0] ? first : 0 });
+      // slide 1 keeps its own pace: its entrance is the hand-off from the loading screen
+      else if (e.target === slides[0]) b.playing = b.tl.tweenTo(b.tl.duration(), { delay: first });
+      else b.playing = b.tl.tweenTo(b.tl.duration(), { duration: Math.min(b.tl.duration(), SCROLL_PLAY) || 0.01 });
       if (e.target === slides[0]) first = 0;
     }
   }, { rootMargin: '0px 0px -10% 0px' });
