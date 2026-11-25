@@ -1,0 +1,12 @@
+# The Vercel CLI uploads the working tree and ignores .gitignore — keep the deck, raw downloads and local output out.
+*.pptx
+ecco-site-assets
+node_modules
+microsite/dist
+microsite/shots
+microsite/*.log
+microsite/*-log.txt
+microsite/smoke-out.txt
+microsite/scripts/_debug.mjs
+.env*
+.vercel
