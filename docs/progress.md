@@ -53,3 +53,4 @@ Ruling: zone manifesto build keeps the diagram (shrunk, left) instead of fading 
 Ruling: deleting the 8 dead scroll-era files was refused by the permission classifier (no git yet, irreversible) — left in place, unimported, until the user OKs it.
 Ruling: repo root = D:\ecco; .gitignore keeps out the .pptx and raw ecco-site-assets/; vercel.json builds microsite/.
 Round 4: complete — `npm run smoke` → SMOKE PASS (1440 + 1920: 26 stops / 23 slides, back through builds, nav, wheel gesture, film dialog, F5, ?nowebgl, reduced motion); perf p50 16.7 ms, p95 16.8 ms.
+Ruling: published per user — GitHub ohkrahul/ecco (public, user chose "push as is" after the confidentiality warning); Vercel project ecco-walk-your-walk, Git-connected (push to main = production deploy). ecco.vercel.app is owned by another account → https://ecco-india.vercel.app added as the project domain.

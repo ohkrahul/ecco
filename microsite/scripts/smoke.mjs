@@ -7,6 +7,7 @@ import { chromium } from 'playwright-core';
 import { mkdirSync } from 'node:fs';
 
 const BASE = process.env.URL || 'http://localhost:4173';
+const OWN = ['localhost', '127.0.0.1', new URL(BASE).hostname]; // requests anywhere else count as external
 const WIDTHS = (process.env.WIDTHS || '1440,1920').split(',').map(Number); // desktop pitch build
 const HEIGHT = { 1440: 900, 1920: 1080, 1280: 720 };
 const SHOE = ['top', 'shoe', 'finale']; // the only slides that show the 3D shoe
@@ -28,7 +29,7 @@ async function open(width, { query = '', reducedMotion = 'no-preference' } = {})
   page.on('response', (r) => r.status() >= 400 && errors.push(`${r.status()} ${r.url()}`));
   page.on('request', (r) => {
     const u = new URL(r.url());
-    if (/^https?:$/.test(u.protocol) && !['localhost', '127.0.0.1'].includes(u.hostname)) external.push(r.url());
+    if (/^https?:$/.test(u.protocol) && !OWN.includes(u.hostname)) external.push(r.url());
   });
   await page.goto(BASE + '/' + query);
   try {
