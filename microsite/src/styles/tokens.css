@@ -1,0 +1,30 @@
+:root {
+  /* Colour plan — "Nordic Sage" (chosen 2026-11-25). Light and airy; dark only for drama moments. */
+  --paper: #fbfcfa;   /* main light background */
+  --cloud: #edf2eb;   /* alternate light panels */
+  --line: #dde4da;    /* dividers, card borders */
+  --ink: #13201a;     /* text */
+  --muted: #5f6d64;   /* secondary text on light */
+  --forest: #16241c;  /* dark sections: x-ray, film, footer */
+  --on-dark: #eef3ec; /* text on dark */
+  --on-dark-muted: rgba(238, 243, 236, 0.62);
+  --sage: #4f8a5b;    /* the one accent: CTAs, progress, footprints */
+  --sage-light: #9fd3a6; /* accent on dark: x-ray glow, labels */
+
+  --sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+
+  --fs-hero: clamp(56px, 10.4vw, 210px);
+  --fs-h2: clamp(40px, 5.4vw, 96px);
+  --fs-h3: clamp(20px, 1.7vw, 30px);
+  --fs-lede: clamp(17px, 1.35vw, 22px);
+  --fs-body: clamp(15px, 1.05vw, 18px);
+  --fs-label: 11px;
+
+  --pad: clamp(72px, 10vh, 132px);
+  --gutter: clamp(20px, 4.2vw, 72px);
+  --radius: clamp(14px, 1.4vw, 22px);
+  --header-h: 56px;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}

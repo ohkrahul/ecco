@@ -1,0 +1,14 @@
+# Confidential client deck and raw downloads from au.ecco.com (converted copies live in microsite/public/img)
+*.pptx
+ecco-site-assets/
+
+node_modules/
+microsite/dist/
+.vercel
+
+# smoke-check output
+microsite/shots/
+microsite/*.log
+microsite/*-log.txt
+microsite/smoke-out.txt
+microsite/scripts/_debug.mjs

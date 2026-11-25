@@ -1,0 +1,5 @@
+{
+  "installCommand": "cd microsite && npm ci",
+  "buildCommand": "cd microsite && npm run build",
+  "outputDirectory": "microsite/dist"
+}
