@@ -4,7 +4,7 @@ import { slide } from '../deck.js';
 export function init({ stage }) {
   slide('shoe', (tl, el) => {
     // Side profile (rotY ≈ 0) so the cut travels heel → toe.
-    const pose = stage?.show('shoe', { idle: 0, rotX: 0.14, rotY: -0.32, scale: 1.1, y: 0.02 });
+    const pose = stage?.show('shoe', { idle: 0, rotX: 0.14, rotY: -0.32, scale: 1.1, y: 0.02 }, el.querySelector('.shoe-slot'));
     tl.from(el.querySelectorAll('.craft-head > *'), { y: 40, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, 0);
     if (pose) {
       tl.from(pose, { visible: 0, duration: 0.6 }, 0)

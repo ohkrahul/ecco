@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-import { slide } from '../deck.js';
+import { slide, scrollMode } from '../deck.js';
 import { placeFootprints } from '../footprints.js';
 
 const STOP_AT = [0.12, 0.3, 0.5, 0.68, 0.86]; // positions along the path
@@ -16,11 +16,12 @@ export function init() {
   slide('one-pair', (tl, el) => {
     const stops = [...el.querySelectorAll('.op-stop')];
     // Hang each photo on its point of the path (viewBox 1600×900, "meet"), above or below — whichever side has room.
+    // (Scroll mode: the photos sit in a grid instead.)
     const w = el.clientWidth;
     const h = el.clientHeight;
     const k = Math.min(w / 1600, h / 900);
     const length = path.getTotalLength();
-    stops.forEach((stop, i) => {
+    if (!scrollMode) stops.forEach((stop, i) => {
       const pt = path.getPointAtLength(STOP_AT[i] * length);
       const half = stop.offsetWidth / 2 + 12;
       const x = gsap.utils.clamp(half, w - half, (w - 1600 * k) / 2 + pt.x * k);

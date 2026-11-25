@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-import { slide, reduced } from '../deck.js';
+import { slide, reduced, scrollMode } from '../deck.js';
 
 const HOLD = 1.7; // seconds per caption
 
@@ -26,8 +26,9 @@ export function init() {
 
     tl.fromTo(media, { clipPath: 'inset(22% 28% 22% 28% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1.4, ease: 'power3.inOut' }, 0)
       .from(film.querySelectorAll('.label, h2, .uh-tagline'), { y: 40, opacity: 0, stagger: 0.12, duration: 1, ease: 'power3.out' }, 0.6)
-      .from(counter, { opacity: 0, duration: 0.6 }, 1.2)
-      .addLabel('end', 2.2)
+      .from(counter, { opacity: 0, duration: 0.6 }, 1.2);
+    // Deck: a click turns the film into its end frame. Scroll: the end frame simply follows below the film.
+    if (!scrollMode) tl.addLabel('end', 2.2)
       .to(media, { opacity: 0.25, duration: 0.8 }, 'end')
       .to([film, counter], { autoAlpha: 0, duration: 0.6 }, 'end')
       .fromTo(end, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8, ease: 'power2.out', immediateRender: false }, 'end+=0.4')

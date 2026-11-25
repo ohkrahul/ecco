@@ -7,6 +7,15 @@ import { reduced } from './deck.js';
 const LEATHER = '#e9e2d5';
 const GLOW = new THREE.Color('#9fd3a6'); // --sage-light
 const MODEL_URL = '/models/shoe.glb';
+const FOV = 30;
+
+/** Visible world width at the shoe's plane for a w×h window: the shoe is 2 units long and fills ~43% of a landscape
+ *  screen (80% of a portrait one). Also used by the loading screen to size its drawing like the 3D shoe. */
+export function viewWidth(w, h) {
+  const perUnit = 2 * Math.tan(THREE.MathUtils.degToRad(FOV / 2)) * (w / h); // visible width at distance 1
+  const share = w < h ? 0.8 : 0.43;
+  return Math.max(4.6, 2 / (share * perUnit)) * perUnit;
+}
 
 /** Default pose. Each shoe slide owns one pose object and tweens it. */
 export const basePose = () => ({
@@ -38,7 +47,7 @@ export async function createStage(canvas, { onProgress = () => {} } = {}) {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+  const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100);
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.55;
@@ -135,9 +144,7 @@ export async function createStage(canvas, { onProgress = () => {} } = {}) {
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5, Math.sqrt(3.7e6 / (w * h))));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    const visibleWidth = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect;
-    const share = camera.aspect < 1 ? 0.8 : 0.43; // shoe length as a share of screen width
-    const distance = Math.max(4.6, 2 / (share * visibleWidth));
+    const distance = viewWidth(w, h) / (2 * Math.tan(THREE.MathUtils.degToRad(FOV / 2)) * camera.aspect);
     camera.position.set(0, 0.32, distance);
     camera.lookAt(0, 0, 0);
     camera.updateProjectionMatrix();
@@ -146,6 +153,7 @@ export async function createStage(canvas, { onProgress = () => {} } = {}) {
   addEventListener('resize', resize);
 
   const poses = new Map();
+  const anchors = new Map(); // pose name → element the shoe stays centred on (its slide's .shoe-slot)
   const order = []; // active pose keys, most recent last
   const clock = new THREE.Clock();
   let fading = null; // pose that just left the screen; keep drawing it until its own tween fades it out
@@ -179,16 +187,22 @@ export async function createStage(canvas, { onProgress = () => {} } = {}) {
       p.rotY + (Math.sin(t * 0.4) * 0.32 + tilt.y) * p.idle,
       p.rotZ,
     );
-    shoe.position.set(p.x, p.y + Math.sin(t * 1.1) * 0.035 * p.idle, 0);
+    // Follow the anchor: in the deck the shoe glides with its slide, in scroll mode it scrolls with it.
+    const box = anchors.get(name)?.getBoundingClientRect();
+    if (box && (box.bottom < 0 || box.top > innerHeight)) return void (canvas.style.opacity = 0); // its slot is off screen
+    const unit = viewWidth(innerWidth, innerHeight) / innerWidth; // world units per screen px
+    const x = p.x + (box ? (box.left + box.width / 2 - innerWidth / 2) * unit : 0);
+    const y = p.y - (box ? (box.top + box.height / 2 - innerHeight / 2) * unit : 0);
+    shoe.position.set(x, y + Math.sin(t * 1.1) * 0.035 * p.idle, 0);
     shoe.scale.setScalar(p.scale);
-    floor.position.y = p.y - 0.62 * p.scale;
+    floor.position.y = y - 0.62 * p.scale;
 
-    const cut = THREE.MathUtils.lerp(-1.4, 1.4, p.sweep) * p.scale + p.x;
+    const cut = THREE.MathUtils.lerp(-1.4, 1.4, p.sweep) * p.scale + x;
     leatherClip.constant = -cut;
     wireClip.constant = cut;
     const xrayOn = p.sweep > 0.001;
     for (const w of wires) w.visible = xrayOn;
-    glow.position.set(cut, p.y, 0.4);
+    glow.position.set(cut, y, 0.4);
     glow.visible = p.xray > 0.001;
     glowMat.uniforms.uOpacity.value = p.xray;
     renderer.render(scene, camera);
@@ -219,11 +233,12 @@ export async function createStage(canvas, { onProgress = () => {} } = {}) {
 
   return {
     canvas,
-    /** A slide arrives: reset its pose to `values`, draw it. Returns the pose for the slide to tween. */
-    show(name, values = {}) {
+    /** A slide arrives: reset its pose to `values`, draw it centred on `anchor`. Returns the pose to tween. */
+    show(name, values = {}, anchor = null) {
       const p = poses.get(name) ?? {};
       gsap.killTweensOf(p);
       poses.set(name, Object.assign(p, basePose(), values));
+      anchors.set(name, anchor);
       want(name, true);
       return p;
     },

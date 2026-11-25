@@ -42,7 +42,11 @@ so the microsite and the PPT stay in step; it shows automatically on localhost (
 | 25 | Owners' Club — both routes |
 | end | Thank you |
 
-**Desktop only** for the pitch (laptop / projector). Mobile layout is not maintained.
+**Every device.** Laptops, desktops and tablets held sideways get the slide deck above (tablets: swipe up/left for
+next, down/right for back). Phones and upright tablets (narrower than 900 px, shorter than 560 px, or portrait up to
+1199 px) get one long page instead: thumb-scroll, each slide's animation plays as it comes into view, the second-click
+reveals play by themselves, and the header has a Menu with the chapters. Turning a tablet across the boundary reloads
+into the other mode at the same slide.
 
 ## Check it
 
@@ -55,7 +59,9 @@ npm run smoke        # in another: clicks through every slide and build in Edge 
                      # the film dialog, F5 → slide 1, ?nowebgl and reduced motion.
 ```
 
-Options: `WIDTHS=1440 SKIP_PERF=1 npm run smoke`.
+The smoke run also swipes through the deck on an iPad held sideways (1024×768, touch) and scrolls the whole page on a
+phone (390×844) and an upright tablet (768×1024). Options: `WIDTHS=1440 SKIP_PERF=1 npm run smoke`; `URL=http://localhost:5173`
+to check the dev server instead of a build.
 
 ## Swapping in real assets (no code changes)
 

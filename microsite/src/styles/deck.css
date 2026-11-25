@@ -4,7 +4,7 @@
    ========================================================================= */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { overflow: hidden; height: 100%; }
+html, body { overflow: hidden; height: 100%; overscroll-behavior: none; }
 html { -webkit-text-size-adjust: 100%; }
 html body { visibility: visible; } /* index.html hides the page until this stylesheet has loaded */
 body { font-family: var(--sans); font-size: var(--fs-body); line-height: 1.5; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
@@ -32,7 +32,7 @@ h2.serif { line-height: 0.95; }
 /* ---------- Slides + themes ---------------------------------------------- */
 /* Fixed, so the page itself can never scroll (not even focus scrolling); deck.js glides it slide to slide. */
 main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
-.slide { position: relative; height: 100vh; min-height: 640px; overflow: hidden; padding: calc(var(--header-h) + 5vh) var(--gutter) 6vh; display: flex; flex-direction: column; justify-content: center; gap: 3.2vh; }
+.slide { position: relative; height: 100vh; height: 100dvh; min-height: 560px; overflow: hidden; padding: calc(var(--header-h) + 5vh) var(--gutter) 6vh; display: flex; flex-direction: column; justify-content: center; gap: 3.2vh; }
 .slide-head { display: grid; gap: 1.6vh; max-width: 1100px; position: relative; z-index: 1; }
 [data-theme="light"] { background: var(--paper); color: var(--ink); }
 [data-theme="cloud"] { background: var(--cloud); color: var(--ink); }
@@ -51,8 +51,8 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .above-stage { position: relative; z-index: 6; }
 .shoe-fallback { display: none; }
 .no-webgl #stage { display: none; }
-.no-webgl .hero .shoe-fallback, .no-webgl .craft .shoe-fallback, .no-webgl .finale .shoe-fallback {
-  display: block; position: absolute; left: 50%; top: 56%; width: min(56vw, 700px); transform: translate(-50%, -50%); z-index: 2; }
+.shoe-slot { position: absolute; inset: 0; pointer-events: none; } /* the 3D shoe stays centred on this (stage.js) */
+.no-webgl .shoe-fallback { display: block; position: absolute; left: 50%; top: 56%; width: min(56vw, 700px); transform: translate(-50%, -50%); z-index: 2; }
 
 /* ---------- Preloader -------------------------------------------------------- */
 /* Same colour as slide 1, so when the background fades the shoe lands straight onto the opening slide. */
@@ -79,6 +79,7 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .site-header.on-dark { color: var(--on-dark); }
 .logo-mark { display: block; width: 92px; aspect-ratio: 110 / 30; background: currentColor; -webkit-mask: url(/img/ecco-logo.svg) no-repeat center / contain; mask: url(/img/ecco-logo.svg) no-repeat center / contain; }
 .nav { display: flex; gap: 26px; margin: 0 auto; font-size: 13px; font-weight: 500; }
+.menu-btn { display: none; }
 .nav a { opacity: 0.6; transition: opacity 0.3s; }
 .nav a:hover, .nav a.is-active { opacity: 1; }
 .nav a.is-active { text-decoration: underline; text-underline-offset: 6px; text-decoration-color: var(--sage); }
@@ -223,8 +224,8 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .kvs { flex-direction: row; align-items: center; gap: 3vw; }
 .kvs-head { flex: 1; display: grid; gap: 1.6vh; }
 .kvs-head h2 { font-size: clamp(48px, 6vw, 110px); font-family: var(--serif); font-style: italic; font-weight: 500; letter-spacing: -0.02em; }
-.kv-grid { display: grid; grid-template-columns: repeat(2, calc(30vh * 1.777)); gap: 1.4vh; }
-.kv-grid .frame { height: 30vh; box-shadow: 0 24px 50px rgba(19, 32, 26, 0.16); }
+.kv-grid { display: grid; grid-template-columns: repeat(2, min(calc(30vh * 1.777), 32vw)); gap: 1.4vh; }
+.kv-grid .frame { aspect-ratio: 16 / 9; box-shadow: 0 24px 50px rgba(19, 32, 26, 0.16); }
 
 /* ---------- 10 Unseen Hours ---------------------------------------------------------- */
 .unseen { padding: 0; }
@@ -393,3 +394,152 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .finale-ctas { position: absolute; left: 0; right: 0; bottom: 11vh; display: grid; gap: 8px; justify-items: center; text-align: center; }
 .thanks { font-size: clamp(36px, 4vw, 64px); font-style: italic; line-height: 1; }
 .credits { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 3vh; text-align: center; font-size: 11px; color: var(--muted); }
+
+/* =========================================================================
+   Scroll mode — phones, upright tablets, very short screens (html.is-scroll, set by deck.js).
+   One long page: every slide is one column at its natural height.
+   ========================================================================= */
+html.is-scroll { height: auto; overflow-x: hidden; overflow-y: auto; overscroll-behavior: auto; }
+.is-scroll body { height: auto; overflow: visible; }
+.is-scroll main { position: relative; z-index: 0; will-change: auto; } /* its own layer: under the loading screen and the 3D canvas */
+.is-scroll .slide { height: auto; min-height: 0; overflow: clip; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 24px; padding: calc(var(--header-h) + 40px) var(--gutter) 64px; }
+.is-scroll h2 { font-size: clamp(34px, 9vw, 64px); }
+.is-scroll .lede { font-size: 17px; }
+
+/* Header: logo + menu; the chapter list opens full screen. */
+.is-scroll .site-header { gap: 16px; }
+/* frosted bar on a pseudo-element: backdrop-filter on the header itself would trap the fixed menu inside it */
+.is-scroll .site-header::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(251, 252, 250, 0.88); backdrop-filter: blur(12px); }
+.is-scroll .site-header.on-dark::before { background: rgba(22, 36, 28, 0.88); }
+.is-scroll .chapter-label { display: none; }
+.is-scroll .menu-btn { display: inline-flex; align-items: center; margin-left: auto; height: 34px; padding: 0 16px; border-radius: 999px; border: 1px solid currentColor; font-size: 13px; font-weight: 600; }
+.is-scroll .nav { display: none; }
+.is-scroll .nav.is-open { display: flex; position: fixed; inset: var(--header-h) 0 0 0; flex-direction: column; justify-content: center; gap: 6px; margin: 0; padding: 0 var(--gutter) 10vh; background: var(--paper); color: var(--ink); font-size: clamp(30px, 9vw, 52px); font-weight: 800; letter-spacing: -0.03em; }
+.is-scroll .nav.is-open a { opacity: 1; }
+.is-scroll .nav.is-open a.is-active { text-underline-offset: 10px; }
+
+/* The 3D shoe's place in the column (stage.js keeps the shoe centred on its slot). */
+.is-scroll .shoe-slot { position: relative; inset: auto; flex: none; height: min(42svh, 80vw); }
+.is-scroll.no-webgl .shoe-fallback { top: 50%; width: 94%; }
+
+/* 1 Opening · 23 Thank you */
+.is-scroll .hero, .is-scroll .finale { min-height: 100svh; justify-content: center; text-align: center; gap: 14px; }
+.is-scroll .hero-eyebrow, .is-scroll .hero-title, .is-scroll .hero-sub, .is-scroll .finale-title, .is-scroll .finale-ctas, .is-scroll .credits { position: static; transform: none; }
+.is-scroll .hero-title, .is-scroll .finale-title { font-size: min(17vw, 20svh); white-space: normal; line-height: 0.9; }
+.is-scroll .hero-sub { white-space: normal; }
+
+/* 2 Business objective */
+.is-scroll .roots ol { grid-template-columns: 1fr 1fr; }
+.is-scroll .hub { width: min(88%, 480px); height: auto; margin: 8px auto 0; }
+.is-scroll .node b { padding: 6px 11px; font-size: 11px; }
+.is-scroll .node-lead b { padding: 8px 16px; font-size: 14px; }
+
+/* 3 Pitch expectation */
+.is-scroll .expectation h2 { font-size: min(16vw, 120px); }
+.is-scroll .aware { grid-template-columns: 1fr; }
+.is-scroll .aware li + li::before { left: 50%; top: -23px; margin: 0 0 0 -16px; transform: rotate(90deg); }
+.is-scroll .axis { height: auto; min-height: 96px; }
+
+/* 4 Key USPs */
+.is-scroll .craft-head, .is-scroll .callouts { position: static; }
+.is-scroll .craft .shoe-slot { height: min(40svh, 72vw); }
+.is-scroll .callouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 22px 18px; }
+.is-scroll .callout { position: static; width: auto; }
+
+/* 5 The brand */
+.is-scroll .brand { display: flex; }
+.is-scroll .brand-ads { width: 100%; }
+.is-scroll .shelf { flex-wrap: wrap; justify-content: center; gap: 18px 4%; }
+.is-scroll .shelf figure { flex: 0 0 29%; }
+.is-scroll .shelf img { height: 72px; }
+
+/* 6 The category: cards in a grid, "And ECCO?" plays over them */
+.is-scroll .wall-head, .is-scroll .wall-cards { position: static; width: auto; }
+.is-scroll .wall-head h2 { font-size: clamp(34px, 9vw, 64px); }
+.is-scroll .wall-cards { display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: dense; gap: 14px; }
+.is-scroll .cat-card, .is-scroll .cat-card.wide { position: static; width: auto; }
+.is-scroll .cat-card.wide { grid-column: 1 / -1; }
+.is-scroll .wall-quiet { position: static; visibility: visible; padding: 16px 0 8px; }
+.is-scroll .wall-line { font-size: clamp(36px, 11vw, 72px); }
+
+/* 7 Audience */
+.is-scroll .audience-photo { flex: none; height: min(52svh, 110vw); }
+.is-scroll .insights { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+/* 8 The zone: circles, then the manifesto below them */
+.is-scroll .zone-title { position: static; }
+.is-scroll .circles { position: relative; inset: auto; height: min(150vw, 640px); }
+.is-scroll .zc { top: 50%; width: min(46vw, 290px); padding: 16px; }
+.is-scroll .zc span { font-size: 12px; }
+.is-scroll .zone-core { top: 50%; }
+.is-scroll .zone-core strong { font-size: clamp(20px, 5.4vw, 34px); }
+.is-scroll .zone-manifesto { position: static; width: auto; transform: none; }
+.is-scroll .manifesto-text { font-size: clamp(28px, 8vw, 52px); }
+
+/* 9 / 16 Route openers */
+.is-scroll .route-intro h2 { font-size: min(15vw, 110px); }
+.is-scroll .versus { grid-template-columns: 1fr; gap: 20px; }
+.is-scroll .chapter-num { font-size: 42vw; }
+
+/* 10 Key visuals */
+.is-scroll .kv-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.is-scroll .kv-grid .frame { height: auto; aspect-ratio: 16 / 9; }
+
+/* 11 The Unseen Hours: the film fills the first screen; the end frame follows below it */
+.is-scroll .unseen { padding: calc(var(--header-h) + 40px) var(--gutter) 64px; gap: 40px; }
+.is-scroll .uh-media { bottom: auto; height: 100svh; }
+.is-scroll .uh-film { position: relative; inset: auto; width: auto; min-height: calc(100svh - var(--header-h) - 120px); }
+.is-scroll .uh-film h2 { font-size: min(15vw, 110px); }
+.is-scroll .uh-captions li { font-size: min(9vw, 56px); }
+.is-scroll .uh-counter { top: calc(100svh - 110px); bottom: auto; }
+.is-scroll .uh-end { position: relative; inset: auto; grid-template-columns: 1fr; padding: 0; visibility: visible; }
+.is-scroll .uh-poster { justify-self: stretch; width: 100%; height: auto; }
+
+/* 12 #EccoUnPosted */
+.is-scroll .up-left { flex: none; min-width: 0; }
+.is-scroll .up-cards { height: min(46vw, 300px); margin-left: 4px; } /* four overlapping 9:16 cards fit a 360 px screen */
+.is-scroll .up-card { margin-right: -5vw; }
+.is-scroll .up-formats { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+.is-scroll .up-format .frame { height: auto; aspect-ratio: 4 / 3; }
+
+/* 13 Practice Club */
+.is-scroll .practice-head { flex-direction: column; align-items: flex-start; }
+.is-scroll .zones { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); height: auto; }
+.is-scroll .zones .tile { min-height: 190px; }
+.is-scroll .steps { grid-template-columns: 1fr 1fr; }
+
+/* 14 Spotted */
+.is-scroll .names { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.is-scroll .name-col li { overflow-wrap: anywhere; }
+.is-scroll .viewfinder { width: 100%; height: auto; }
+
+/* 15 / 21 Campaign flows: phases as a list */
+.is-scroll .flow-steps { display: none; }
+.is-scroll .flow-track { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.is-scroll .phase .frame { height: auto; aspect-ratio: 16 / 9; }
+
+/* 17 Out of home */
+.is-scroll .wk-item { width: 80vw; }
+.is-scroll .wk-item .frame { height: auto; aspect-ratio: 16 / 9; }
+
+/* 18 Traffic */
+.is-scroll .lane { gap: 5px; }
+.is-scroll .lane i { width: 9vw; height: 22px; }
+.is-scroll .headlines { grid-template-columns: 1fr; }
+
+/* 19 One pair: the trip as a photo grid */
+.is-scroll .one-pair { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding: calc(var(--header-h) + 40px) var(--gutter) 64px; }
+.is-scroll .op-head { position: static; grid-column: 1 / -1; }
+.is-scroll .op-svg { display: none; }
+.is-scroll .op-stop { position: static; width: auto; }
+.is-scroll .op-product { position: static; grid-column: 1 / -1; width: min(70%, 340px); margin: 8px auto 0; }
+
+/* 20 BookMyShow */
+.is-scroll .bento { grid-template-columns: 1fr 1fr; grid-template-rows: none; grid-auto-rows: 170px; }
+.is-scroll .tile-lg { grid-column: 1 / -1; grid-row: span 2; }
+
+/* 22 Owners Club */
+.is-scroll .owner-cards { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.is-scroll .owner-card { grid-template-columns: 1fr; }
+.is-scroll .owner-card { padding: 16px; }
+.is-scroll .owner-card .frame { height: auto; aspect-ratio: 4 / 3; }

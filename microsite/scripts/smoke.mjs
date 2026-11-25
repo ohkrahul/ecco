@@ -1,6 +1,7 @@
-// Smoke check for the slide-deck build: opens the built site in Edge, clicks through every slide and build
-// like a presenter, screenshots each stop to shots/, and fails on JS errors, 404s, external requests,
-// a stuck preloader, the 3D shoe showing on the wrong slide, or text cut off by the screen edge.
+// Smoke check: opens the built site in Edge, clicks through every slide and build like a presenter (deck mode,
+// desktop widths + an iPad held sideways, swiping), scrolls the whole page on a phone and an upright tablet
+// (scroll mode), screenshots to shots/, and fails on JS errors, 404s, external requests, a stuck preloader,
+// sideways scrolling, the 3D shoe showing on the wrong slide, or text cut off by the screen edge.
 // Usage: npm run build && npm run preview  (in another terminal)  then  npm run smoke
 // Env: URL (default http://localhost:4173), WIDTHS="1440,1920", SKIP_PERF=1
 import { chromium } from 'playwright-core';
@@ -9,7 +10,7 @@ import { mkdirSync } from 'node:fs';
 const BASE = process.env.URL || 'http://localhost:4173';
 const OWN = ['localhost', '127.0.0.1', new URL(BASE).hostname]; // requests anywhere else count as external
 const WIDTHS = (process.env.WIDTHS || '1440,1920').split(',').map(Number); // desktop pitch build
-const HEIGHT = { 1440: 900, 1920: 1080, 1280: 720 };
+const HEIGHT = { 1440: 900, 1920: 1080, 1280: 720, 1024: 768, 390: 844, 768: 1024 };
 const SHOE = ['top', 'shoe', 'finale']; // the only slides that show the 3D shoe
 
 let failures = 0;
@@ -18,8 +19,8 @@ mkdirSync('shots', { recursive: true });
 
 const browser = await chromium.launch({ channel: process.env.CHANNEL || 'msedge' });
 
-async function open(width, { query = '', reducedMotion = 'no-preference' } = {}) {
-  const page = await browser.newPage({ viewport: { width, height: HEIGHT[width] || 900 }, reducedMotion });
+async function open(width, { query = '', reducedMotion = 'no-preference', touch = false } = {}) {
+  const page = await browser.newPage({ viewport: { width, height: HEIGHT[width] || 900 }, reducedMotion, hasTouch: touch, isMobile: touch && width < 900 });
   const errors = [];
   const external = [];
   page.on('pageerror', (e) => errors.push(e.message));
@@ -102,6 +103,65 @@ for (const width of WIDTHS) {
   }
   if (errors.length) fail(`${width}: ${errors.length} error(s)\n  ` + [...new Set(errors)].join('\n  '));
   if (external.length) fail(`${width}: external requests\n  ` + external.join('\n  '));
+  await page.close();
+}
+
+// iPad held sideways: still the deck, moved by finger swipes (one swipe = one step).
+{
+  const { page, errors } = await open(1024, { touch: true });
+  if ((await page.evaluate(() => window.deck.mode)) !== 'deck') fail('1024×768 touch: expected the deck');
+  const cdp = await page.context().newCDPSession(page);
+  const swipe = async () => {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 512, y: 540 }] });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 512, y: 340 }] });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  };
+  await settle(page);
+  const count = await page.evaluate(() => window.deck.count);
+  let steps = 0;
+  for (let s = await state(page); !(s.index === count - 1 && s.stop === s.stops - 1) && steps < 40; s = await state(page)) {
+    await swipe();
+    await page.waitForTimeout(200);
+    await settle(page);
+    const t = await state(page);
+    if (t.index === s.index && t.stop === s.stop) { fail(`ipad: a swipe on #${s.id} did nothing`); break; }
+    await checkSlide(page, `ipad ${t.id}`);
+    steps++;
+  }
+  if ((await state(page)).index !== count - 1) fail('ipad: swiping never reached the last slide');
+  await page.screenshot({ path: 'shots/ipad-last.png' });
+  if (errors.length) fail('ipad: ' + [...new Set(errors)].join('\n  '));
+  await page.close();
+}
+
+// Phones and upright tablets: one long page. Scroll it all; each screen must fit sideways, keep its text in view,
+// and only show the 3D shoe while one of its slots is on screen.
+for (const width of [390, 768]) {
+  const { page, errors, external } = await open(width, { touch: true });
+  if ((await page.evaluate(() => window.deck.mode)) !== 'scroll') fail(`${width}: expected scroll mode`);
+  const H = HEIGHT[width];
+  const total = await page.evaluate(() => document.documentElement.scrollHeight);
+  for (let y = 0, i = 0; y < total; y += Math.round(H * 0.85), i++) {
+    await page.evaluate((y) => scrollTo(0, y), y);
+    await page.waitForTimeout(900);
+    if (i % 3 === 0) await page.screenshot({ path: `shots/${width}-scroll-${String(i).padStart(2, '0')}.png` });
+    const r = await page.evaluate(() => {
+      const opacity = +getComputedStyle(document.getElementById('stage')).opacity;
+      const slotOnScreen = [...document.querySelectorAll('.shoe-slot')].some((s) => { const b = s.getBoundingClientRect(); return b.bottom > 0 && b.top < innerHeight; });
+      const seen = (n) => { for (let e = n; e; e = e.parentElement) { const cs = getComputedStyle(e); if (cs.visibility === 'hidden' || +cs.opacity < 0.05 || cs.display === 'none') return false; } return true; };
+      const cut = [...document.querySelectorAll('main h1, main h2, main h3, main p, main li, main figcaption')]
+        .filter((n) => !n.closest('.wk-track, .chapter-num, dialog'))
+        .filter((n) => { const b = n.getBoundingClientRect(); return b.width && b.bottom > 0 && b.top < innerHeight && (b.right > innerWidth + 1 || b.left < -1); })
+        .filter(seen).map((n) => n.textContent.trim().slice(0, 30));
+      return { overflow: document.documentElement.scrollWidth - innerWidth, opacity, slotOnScreen, cut };
+    });
+    if (r.overflow > 1) fail(`${width} scroll y=${y}: sideways overflow ${r.overflow}px`);
+    if (r.opacity > 0.01 && !r.slotOnScreen) fail(`${width} scroll y=${y}: 3D shoe visible (opacity ${r.opacity}) with none of its slides on screen`);
+    if (r.cut.length) fail(`${width} scroll y=${y}: text cut off sideways: ${r.cut.join(' | ')}`);
+  }
+  if (errors.length) fail(`${width}: ` + [...new Set(errors)].join('\n  '));
+  if (external.length) fail(`${width}: external requests
+  ` + external.join('\n  '));
   await page.close();
 }
 

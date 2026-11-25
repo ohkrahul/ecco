@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { reduced } from '../deck.js';
 import { VIEW, BODY, OUTLINE, STITCH, PLACE } from './shoe-outline.js';
+import { viewWidth } from '../stage.js';
 
 /**
  * Loading screen — "Blueprint": a pattern drawing of the shoe (traced from the 3D shoe at rest) draws itself as the
@@ -33,10 +34,13 @@ function setup() {
   const bw = x1 - x0;
   const bh = y1 - y0;
   const pt = ([fx, fy]) => [x0 + fx * bw, y0 + fy * bh];
-  // Same place and size as slide 1's 3D shoe: its geometry scales with the window width around the screen centre.
-  const k = (PLACE.w * innerWidth) / bw; // screen px per drawing unit
-  const left = innerWidth / 2 + PLACE.cx * innerWidth - (x0 + bw / 2) * k;
-  const top = innerHeight / 2 + PLACE.cy * innerWidth - (y0 + bh / 2) * k;
+  // Same place and size as slide 1's 3D shoe: centred on its slot, scaled like the 3D view (PLACE was measured
+  // at 1440×900, in screen widths from the slot centre).
+  const slot = document.querySelector('#top .shoe-slot').getBoundingClientRect();
+  const f = (innerWidth * viewWidth(1440, 900)) / viewWidth(innerWidth, innerHeight); // px per measured screen width
+  const k = (PLACE.w * f) / bw; // screen px per drawing unit
+  const left = slot.left + slot.width / 2 + PLACE.cx * f - (x0 + bw / 2) * k;
+  const top = slot.top + slot.height / 2 + PLACE.cy * f - (y0 + bh / 2) * k;
   const dimY = y1 + 0.17 * bh;
   el.insertAdjacentHTML('afterbegin', `<div class="pl-blueprint">
       <div class="bp-grid"></div>

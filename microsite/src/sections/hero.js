@@ -5,7 +5,7 @@ import { slide } from '../deck.js';
  *  turns it into leather, then the title rises and the shoe starts to sway. */
 export function init({ stage }) {
   slide('top', (tl, el) => {
-    const pose = stage?.show('top', { y: -0.18 });
+    const pose = stage?.show('top', { y: -0.18 }, el.querySelector('.shoe-slot'));
     const { chars } = SplitText.create(el.querySelector('.hero-title'), { type: 'words,chars' });
     if (pose) {
       tl.from(pose, { visible: 0, duration: 0.6 }, 0)
