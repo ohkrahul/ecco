@@ -14,3 +14,4 @@ microsite/smoke-out.txt
 microsite/scripts/_debug*.mjs
 
 .env*
+CHANGES/

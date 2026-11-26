@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { slide, reduced } from '../deck.js';
 import { placeFootprints } from '../footprints.js';
+import { hoverZoom } from '../zoom.js';
 
 /**
  * Entrances for the simpler slides. Every [data-reveal] element already rises in (deck.js);
@@ -11,8 +12,7 @@ export function init() {
   slide('objective', (tl, el) => {
     tl.from(el.querySelector('.hub-core'), { scale: 0, duration: 1, ease: 'back.out(1.6)' }, 0.3)
       .from(el.querySelectorAll('.spoke i'), { scaleX: 0, duration: 0.7, ease: 'power2.out', stagger: 0.09 }, 0.7)
-      .from(el.querySelectorAll('.node b'), { scale: 0.6, opacity: 0, duration: 0.7, ease: 'back.out(1.8)', stagger: 0.09 }, 0.95)
-      .from(el.querySelectorAll('.roots li'), { y: 24, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08 }, 1.1);
+      .from(el.querySelectorAll('.node b'), { scale: 0.6, opacity: 0, duration: 0.7, ease: 'back.out(1.8)', stagger: 0.09 }, 0.95);
   });
 
   // 3 · recognise → understand → experience, then the audience: core buyers first, then ECCO reaches younger
@@ -26,11 +26,10 @@ export function init() {
       .from(acq.children, { opacity: 0, y: 10, duration: 0.5, stagger: 0.08 }, 2.5);
   });
 
-  // 5 · the ad card slides in and its posters drop into place; ECCO's products line up on the shelf
+  // 5 · the ad card slides in and its posters drop into place
   slide('brand', (tl, el) => {
     tl.from(el.querySelector('.brand-ads'), { x: 80, opacity: 0, duration: 1.3, ease: 'expo.out' }, 0.2)
-      .from(el.querySelectorAll('.brand-ads figure'), { y: 40, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12 }, 0.5)
-      .from(el.querySelectorAll('.shelf figure'), { y: 60, opacity: 0, stagger: 0.08, duration: 1, ease: 'power3.out' }, 0.7);
+      .from(el.querySelectorAll('.brand-ads figure'), { y: 40, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12 }, 0.5);
   });
 
   // 6 · 40% / 55% count up
@@ -49,10 +48,11 @@ export function init() {
     });
   }
 
-  // 9 · key visuals wipe open
+  // 9 · key visuals wipe open; hover one to open it up
   slide('kvs', (tl, el) => {
     tl.fromTo(el.querySelectorAll('.kv-grid .frame'), { clipPath: 'inset(0% 100% 0% 0% round 22px)' }, { clipPath: 'inset(0% 0% 0% 0% round 22px)', duration: 1.2, ease: 'power3.inOut', stagger: 0.15 }, 0.2)
       .from(el.querySelectorAll('.kv-grid img'), { scale: 1.2, duration: 1.8, ease: 'power2.out', stagger: 0.15 }, 0.2);
+    return hoverZoom(el, [...el.querySelectorAll('.kv-grid figure')], (f) => f.querySelector('.frame'));
   });
 
   // 11 · the phone cards fan in, then each "Posted" gets struck out
@@ -78,15 +78,26 @@ export function init() {
   belt.append(...[...belt.children].map((n) => Object.assign(n.cloneNode(true), { ariaHidden: 'true' })));
   slide('not-in-ecco', (tl, el) => {
     const rail = el.querySelector('.wk-rail');
-    tl.from(el.querySelector('.wk-belt'), { xPercent: 40, opacity: 0, duration: 1.6, ease: 'expo.out' }, 0.2)
+    tl.fromTo(el.querySelector('.wk-head mark'), { backgroundSize: '0% 0.42em' }, { backgroundSize: '100% 0.42em', duration: 0.9, ease: 'power2.inOut' }, 0.7)
+      .from(el.querySelector('.wk-belt'), { xPercent: 40, opacity: 0, duration: 1.6, ease: 'expo.out' }, 0.2)
       .from(rail, { scaleX: 0, transformOrigin: '0 50%', duration: 1.4, ease: 'expo.out' }, 0.3);
-    if (reduced) return;
+    // Hover a creative: the belt stops dead and the creative opens up over a veil (zoom.js).
+    let move = null;
+    const zoomOff = hoverZoom(el, [...el.querySelectorAll('.wk-item')], (item) => item, { onOpen: () => move && gsap.to(move, { timeScale: 0, duration: 0.2, overwrite: true }) });
+    if (reduced) return zoomOff;
     const period = belt.scrollWidth / 2;
-    const crawl = period / 40; // seconds per loop at 40 px/s
-    const move = gsap.timeline({ repeat: -1 })
+    const crawl = period / 90; // seconds per loop at 90 px/s
+    move = gsap.timeline({ repeat: -1 })
       .fromTo(belt, { x: 0 }, { x: -period, duration: crawl, ease: 'none' }, 0)
       .fromTo(rail, { backgroundPositionX: 0 }, { backgroundPositionX: -period, duration: crawl, ease: 'none' }, 0);
     gsap.from(move, { timeScale: 10, duration: 2.6, ease: 'power2.out' });
+    // Pointer on the belt: it eases to a stop so a creative can be picked; off → it walks on.
+    const hold = () => gsap.to(move, { timeScale: 0, duration: 0.5, ease: 'power2.out', overwrite: true });
+    const walk = () => gsap.to(move, { timeScale: 1, duration: 0.8, ease: 'power2.in', overwrite: true });
+    const area = el.querySelector('.wk-belt');
+    area.addEventListener('pointerenter', hold);
+    area.addEventListener('pointerleave', walk);
+    return () => (zoomOff(), area.removeEventListener('pointerenter', hold), area.removeEventListener('pointerleave', walk));
   });
 
   // 17 · footprints walk out through the jam

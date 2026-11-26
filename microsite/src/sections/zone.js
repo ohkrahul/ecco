@@ -2,7 +2,10 @@ import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import { slide, scrollMode } from '../deck.js';
 
-/** 7 · The zone: Category, Brand and Consumer slide together; the overlap is "Understated by Choice". Click → manifesto. */
+/**
+ * 7 · The zone: Category, Brand and Consumer arrive side by side and hold, so each can be read.
+ * Click → they overlap, and the overlap is "Understated by Choice". Click → manifesto.
+ */
 export function init() {
   slide('zone', (tl, el) => {
     const circles = ['.zc-cat', '.zc-brand', '.zc-con'].map((s) => el.querySelector(s));
@@ -16,16 +19,21 @@ export function init() {
     const out = [[-0.16, 0.16], [0, -0.2], [0.16, 0.16]];
     const { words } = SplitText.create(man.querySelector('.manifesto-text'), { type: 'words' });
     gsap.set([...circles, core], { xPercent: -50, yPercent: -50 });
+    circles.forEach((c, i) => gsap.set(c, { x: start(i)[0] * size, y: start(i)[1] * size }));
 
     tl.from(el.querySelector('.zone-title'), { opacity: 0, y: 20, duration: 0.8 }, 0);
+    circles.forEach((c, i) => tl.from(c, { opacity: 0, scale: 0.8, duration: 0.7, ease: 'power3.out' }, 0.1 + i * 0.12)
+      .from(c.querySelector('span'), { opacity: 0, y: 14, duration: 0.7, ease: 'power3.out' }, 0.4 + i * 0.12));
+
+    // Click: they come together.
+    tl.addLabel('overlap', 1.4);
     circles.forEach((c, i) => {
-      tl.from(c, { opacity: 0, scale: 0.8, duration: 0.7, ease: 'power3.out' }, 0.1 + i * 0.12)
-        .fromTo(c, { x: start(i)[0] * size, y: start(i)[1] * size }, { x: end[i][0] * size, y: end[i][1] * size, duration: 1.4, ease: 'power3.inOut' }, 1)
-        .to(c.querySelector('b'), { x: out[i][0] * size, y: out[i][1] * size, duration: 1, ease: 'power2.inOut' }, 1.5);
+      tl.to(c, { x: end[i][0] * size, y: end[i][1] * size, duration: 1.4, ease: 'power3.inOut' }, 'overlap')
+        .to(c.querySelector('b'), { x: out[i][0] * size, y: out[i][1] * size, duration: 1, ease: 'power2.inOut' }, 'overlap+=0.5');
     });
-    tl.to(el.querySelectorAll('.zc span'), { opacity: 0, duration: 0.4 }, 1.3)
-      .from(core, { autoAlpha: 0, scale: 0.85, duration: 0.8, ease: 'power3.out' }, 2.2)
-      .addLabel('manifesto', 3);
+    tl.to(el.querySelectorAll('.zc span'), { opacity: 0, duration: 0.4 }, 'overlap')
+      .from(core, { autoAlpha: 0, scale: 0.85, duration: 0.8, ease: 'power3.out' }, 'overlap+=1.2')
+      .addLabel('manifesto', '>+0.2');
     // Deck: the diagram shrinks into the left half and the manifesto takes the right. Scroll: the manifesto is below.
     if (!scrollMode) {
       const k = 0.72;
@@ -34,7 +42,8 @@ export function init() {
       tl.to(core, { x: -shift, scale: k, duration: 1.1, ease: 'power3.inOut' }, 'manifesto');
     }
     tl.fromTo(man, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, immediateRender: false }, 'manifesto+=0.5')
-      .fromTo(words, { opacity: 0.14 }, { opacity: 1, stagger: 0.08, duration: 0.4, ease: 'none' }, 'manifesto+=0.6')
+      .from(man.querySelector('.manifesto-zone'), { opacity: 0, y: 20, duration: 0.7, ease: 'power3.out' }, 'manifesto+=0.5')
+      .fromTo(words, { opacity: 0.14 }, { opacity: 1, stagger: 0.08, duration: 0.4, ease: 'none' }, 'manifesto+=0.8')
       .from(man.querySelector('.manifesto-sub'), { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out' }, '>-0.2');
   });
 }

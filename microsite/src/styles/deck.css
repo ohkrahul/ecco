@@ -99,15 +99,10 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 /* ---------- 1 Opening --------------------------------------------------------- */
 .hero-eyebrow { position: absolute; left: 0; right: 0; top: calc(var(--header-h) + 4vh); text-align: center; }
 .hero-title { position: absolute; left: 0; right: 0; top: 15vh; z-index: 1; font-size: var(--fs-hero); line-height: 0.86; letter-spacing: -0.05em; text-align: center; white-space: nowrap; }
-.hero-sub { position: absolute; left: 50%; bottom: 8vh; transform: translateX(-50%); white-space: nowrap; }
 
 /* ---------- 2 Business objective ------------------------------------------------ */
 .objective { flex-direction: row; align-items: center; gap: 4vw; }
 .obj-copy { flex: 1; display: grid; gap: 2.6vh; }
-.roots { display: grid; gap: 1.2vh; margin-top: 1vh; }
-.roots ol { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.roots li { display: grid; gap: 6px; align-content: start; background: var(--cloud); border-radius: var(--radius); padding: 2vh 16px; font-weight: 700; font-size: clamp(15px, 1.15vw, 19px); letter-spacing: -0.015em; line-height: 1.2; }
-.roots li span { font-size: 11px; font-weight: 600; letter-spacing: 0.2em; color: var(--sage); }
 /* The hub: one idea at the centre, a spoke to each channel. Nodes sit on a circle via CSS trig. */
 .hub { position: relative; flex: 0 0 auto; height: min(66vh, 42vw); aspect-ratio: 1; margin-right: 2vw; }
 .hub-core { position: absolute; inset: 35%; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-content: center; text-align: center; z-index: 2; }
@@ -145,7 +140,7 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .band-core { flex: 25; background: var(--ink); color: var(--paper); transform-origin: 0 50%; }
 
 /* ---------- 3 Brand ------------------------------------------------------------ */
-.brand { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 1fr auto; gap: 3vh 4vw; align-items: center; }
+.brand { display: grid; grid-template-columns: 1fr auto; gap: 3vh 4vw; align-items: center; }
 .brand-copy { display: grid; gap: 2vh; }
 .brand-copy .lede strong { color: var(--ink); }
 /* ECCO's ads on a dark card (like deck slide 5). The source files are small (264–853 px), so they're shown
@@ -157,11 +152,6 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .ad-row figure { flex: calc(var(--r)) 1 0; min-width: 0; aspect-ratio: var(--r); }
 .brand-ads img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
 .ad-hero { aspect-ratio: 853 / 361; }
-.shelf { grid-column: 1; display: flex; gap: 2vw; align-items: flex-end; padding-top: 2.4vh; border-top: 1px solid var(--line); }
-.shelf figure { flex: 1; text-align: center; }
-.shelf img { width: 100%; height: 11vh; object-fit: contain; filter: drop-shadow(0 12px 12px rgba(19, 32, 26, 0.14)); transition: transform 0.7s var(--ease); }
-.shelf figure:hover img { transform: translateY(-8px) rotate(-4deg); }
-.shelf figcaption { margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--muted); }
 
 /* ---------- 4 USPs (3D x-ray) --------------------------------------------------- */
 .craft-head { position: absolute; left: var(--gutter); top: calc(var(--header-h) + 6vh); }
@@ -170,17 +160,18 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .callouts { list-style: none; position: absolute; inset: 0; pointer-events: none; }
 .callout { position: absolute; left: var(--x); top: var(--y); width: min(250px, 18vw); }
 .callout .leader { display: block; width: 64px; height: 1px; background: var(--sage-light); opacity: 0.6; margin-bottom: 12px; transform-origin: 0 50%; }
-.callout strong { display: block; font-size: clamp(16px, 1.3vw, 21px); font-weight: 700; letter-spacing: -0.015em; margin: 4px 0 6px; }
-.callout .desc { display: block; font-size: 14px; line-height: 1.5; color: var(--on-dark-muted); }
+.callout strong { display: block; font-size: clamp(18px, 1.6vw, 27px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin-top: 4px; }
 
 /* ---------- 5 Category wall ---------------------------------------------------- */
 .wall-head { position: absolute; left: var(--gutter); top: calc(var(--header-h) + 5vh); width: 36vw; display: grid; gap: 1.6vh; z-index: 3; }
-.wall-head h2 { font-size: clamp(40px, 5vw, 92px); }
+.wall-head h2 { font-size: clamp(34px, 3.7vw, 66px); }
 .wall-cards { position: absolute; inset: calc(var(--header-h) + 2vh) var(--gutter) 3vh; }
 .cat-card { position: absolute; left: var(--x); top: var(--y); width: 14vw; background: var(--paper); padding: 10px 10px 14px; border-radius: 14px; box-shadow: 0 30px 60px rgba(19, 32, 26, 0.18); }
 .cat-card.wide { width: 24vw; }
 .cat-card img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; }
 .cat-card.wide img { aspect-ratio: 16 / 9; }
+/* a type-only card where the deck has no campaign image yet (HOKA) */
+.cat-type { aspect-ratio: 4 / 5; border-radius: 8px; display: flex; align-items: flex-end; padding: 16px; background: linear-gradient(165deg, #33475a, #101b25); color: #fff; font-size: clamp(26px, 2.5vw, 44px); font-weight: 800; font-style: italic; letter-spacing: -0.03em; line-height: 0.9; text-transform: uppercase; }
 .cat-card figcaption { margin-top: 10px; font-size: 12px; color: var(--muted); line-height: 1.35; }
 .cat-card b { display: block; font-size: 15px; color: var(--ink); }
 .cat-card .tag { display: inline-block; margin-top: 8px; padding: 3px 9px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
@@ -203,10 +194,12 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .circles { position: absolute; inset: 0; }
 .zc { position: absolute; left: 50%; top: 53%; width: clamp(220px, 25vw, 420px); aspect-ratio: 1; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: clamp(28px, 3vw, 56px); text-align: center; background: rgba(79, 138, 91, 0.13); border: 1px solid rgba(79, 138, 91, 0.45); }
 .zc b { font-size: clamp(19px, 1.7vw, 28px); letter-spacing: -0.02em; }
-.zc span { font-size: 14px; line-height: 1.45; color: var(--muted); }
+.zc span { max-width: 28ch; font-size: clamp(13px, 1.05vw, 17px); line-height: 1.42; color: var(--muted); }
 .zone-core { position: absolute; left: 50%; top: 53%; display: grid; gap: 6px; text-align: center; z-index: 2; }
 .zone-core strong { font-size: clamp(24px, 2.6vw, 46px); font-weight: 800; letter-spacing: -0.035em; line-height: 1; white-space: nowrap; }
 .zone-manifesto { position: absolute; right: var(--gutter); top: 50%; width: 46%; transform: translateY(-50%); display: grid; gap: 3vh; visibility: hidden; }
+.manifesto-zone { justify-self: start; display: inline-flex; align-items: center; gap: 14px; padding: 10px 24px 10px 18px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: clamp(18px, 1.6vw, 27px); font-weight: 800; letter-spacing: -0.02em; }
+.manifesto-zone .label { color: var(--sage-light); }
 .manifesto-text { font-size: clamp(32px, 3.6vw, 66px); font-weight: 800; letter-spacing: -0.04em; line-height: 1.02; }
 .manifesto-sub { font-family: var(--serif); font-style: italic; font-size: clamp(20px, 1.9vw, 32px); line-height: 1.2; color: var(--muted); }
 
@@ -217,6 +210,7 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .versus .take { color: var(--ink); font-weight: 700; font-size: clamp(20px, 1.9vw, 32px); letter-spacing: -0.02em; line-height: 1.15; }
 .mantras { list-style: none; display: flex; gap: 3vw; flex-wrap: wrap; font-size: clamp(18px, 1.6vw, 26px); font-weight: 700; letter-spacing: -0.02em; position: relative; z-index: 1; }
 .mantras em { color: var(--sage); font-size: 1.15em; }
+.route-line { max-width: 52ch; position: relative; z-index: 1; }
 .celebrating { display: grid; gap: 8px; font-size: var(--fs-lede); position: relative; z-index: 1; }
 .celebrating em { font-size: 1.6em; }
 
@@ -226,6 +220,18 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .kvs-head h2 { font-size: clamp(48px, 6vw, 110px); font-family: var(--serif); font-style: italic; font-weight: 500; letter-spacing: -0.02em; }
 .kv-grid { display: grid; grid-template-columns: repeat(2, min(calc(30vh * 1.777), 32vw)); gap: 1.4vh; }
 .kv-grid .frame { aspect-ratio: 16 / 9; box-shadow: 0 24px 50px rgba(19, 32, 26, 0.16); }
+
+/* Hover a creative to present it (zoom.js): it opens up over a dark veil; the rest of the slide sits behind it. */
+.zoom-veil { position: absolute; inset: 0; z-index: 8; background: rgba(12, 21, 16, 0.82); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; transition: opacity 0.45s var(--ease), visibility 0s 0.45s; cursor: zoom-out; }
+.is-zoom > .zoom-veil { opacity: 1; visibility: visible; transition: opacity 0.45s var(--ease); }
+.is-zoom .wk-belt, .is-zoom .kv-grid { position: relative; z-index: 9; }
+.wk-item, .kv-grid .frame { transition: opacity 0.4s var(--ease); }
+.is-zoom .wk-item:not(.is-zoomed), .is-zoom .kv-grid figure:not(.is-zoomed) .frame { opacity: 0; }
+.is-zoomed { position: relative; z-index: 2; }
+.wk-item.is-zoomed .frame, .kv-grid .is-zoomed .frame { box-shadow: 0 40px 120px rgba(0, 0, 0, 0.5); }
+.is-zoom .wk-item.is-zoomed figcaption { color: rgba(238, 243, 236, 0.75); }
+.is-zoom .wk-item.is-zoomed figcaption strong { color: #fff; }
+.wk-item figcaption { transition: color 0.4s; }
 
 /* ---------- 10 Unseen Hours ---------------------------------------------------------- */
 .unseen { padding: 0; }
@@ -247,14 +253,14 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .uh-sign { font-weight: 800; font-size: clamp(18px, 1.6vw, 26px); letter-spacing: -0.02em; }
 .uh-facts { list-style: none; display: grid; gap: 8px; font-size: 14px; color: var(--on-dark-muted); max-width: 52ch; }
 .uh-facts li::before { content: "— "; color: var(--sage-light); }
-.uh-poster { justify-self: end; height: 70vh; aspect-ratio: 1122 / 1402; }
+.uh-poster { justify-self: end; height: 70vh; aspect-ratio: 1166 / 1287; }
 .uh-poster .frame { height: 100%; box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45); }
 .film-dialog { width: min(92vw, 1400px); max-width: none; margin: auto; border: 0; border-radius: var(--radius); background: #000; overflow: hidden; color: var(--on-dark); }
 .film-dialog::backdrop { background: rgba(10, 16, 12, 0.92); backdrop-filter: blur(6px); }
 .film-dialog video { width: 100%; aspect-ratio: 16 / 9; background: #000; }
 .film-close { position: absolute; top: 16px; right: 16px; background: rgba(19, 32, 26, 0.6); }
 
-/* ---------- 11 #EccoUnPosted ------------------------------------------------------------ */
+/* ---------- 11 #ECCOUnPosted ------------------------------------------------------------ */
 .unposted { flex-direction: row; align-items: center; gap: 4vw; }
 .up-left { flex: 0 0 36%; display: grid; gap: 2vh; }
 .up-cards { display: flex; margin-top: 2vh; height: 28vh; }
@@ -270,12 +276,12 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .up-format .frame { height: 42vh; margin-bottom: 0.6vh; }
 .up-format h3 { font-size: clamp(15px, 1.2vw, 20px); }
 
-/* ---------- 12 Practice Club -------------------------------------------------------------- */
+/* ---------- 12 Pursuit Club -------------------------------------------------------------- */
 .practice { gap: 2.6vh; }
 .practice-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 4vw; }
 .practice-head > div { display: grid; gap: 1.4vh; }
 .pr-quote { max-width: 46ch; font-family: var(--serif); font-style: italic; font-size: clamp(18px, 1.6vw, 28px); line-height: 1.25; display: grid; gap: 8px; }
-.zones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; height: 25vh; }
+.zones { display: grid; grid-template-columns: 1.7fr 1fr 1fr 1fr; gap: 12px; height: 30vh; }
 .tile { position: relative; overflow: hidden; isolation: isolate; border-radius: var(--radius); padding: 2.4vh 1.6vw; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; background: var(--forest); color: var(--on-dark); }
 .tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform 1.4s var(--ease); }
 .tile::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(19,32,26,0) 35%, rgba(19,32,26,0.8)); }
@@ -287,7 +293,7 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .tile-text .label { color: var(--muted) !important; }
 .tile-accent { background: var(--sage) !important; color: #fff; }
 .tile-accent .label { color: rgba(255, 255, 255, 0.85) !important; }
-.steps { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.steps { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .steps li { background: var(--paper); border-radius: var(--radius); padding: 1.8vh 1.4vw; display: grid; gap: 4px; align-content: start; font-size: 14px; color: var(--muted); }
 .steps strong { color: var(--ink); font-size: 18px; letter-spacing: -0.015em; }
 .partners { font-size: 14px; font-weight: 600; line-height: 1.7; }
@@ -332,14 +338,16 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .fp { fill: var(--sage); }
 
 /* ---------- 16 Out of home ------------------------------------------------------------------- */
-.walkway { padding-left: 0; padding-right: 0; }
+/* the belt's height leaves room for the heading, captions and rail on short laptop screens too */
+.walkway { padding-left: 0; padding-right: 0; --wk-h: min(38vh, calc(100dvh - 26rem)); }
 .wk-head { padding: 0 var(--gutter); display: grid; gap: 1.6vh; }
-.wk-head h2 { font-size: clamp(40px, 5vw, 92px); max-width: 18ch; }
-.wk-belt { margin-top: 2vh; overflow: hidden; }
+.wk-head h2 { font-size: clamp(34px, 4.2vw, 80px); }
+.wk-head mark { color: inherit; background: linear-gradient(rgba(79, 138, 91, 0.3), rgba(79, 138, 91, 0.3)) 0 88% / 100% 0.42em no-repeat; padding: 0 0.06em; }
+.wk-belt { margin-top: 2vh; overflow-x: clip; } /* clip, not hidden: a hovered creative may grow past it vertically */
 .wk-track { display: flex; width: max-content; will-change: transform; }
-.wk-item { flex: 0 0 auto; width: calc(38vh * 1.777); margin-right: 22px; }
-.wk-item .frame { height: 38vh; }
-.wk-item figcaption { margin-top: 12px; font-size: 15px; color: var(--muted); }
+.wk-item { flex: 0 0 auto; width: calc(var(--wk-h) * var(--r, 1.777)); margin-right: 22px; } /* --r: the creative's own shape, so none is cropped */
+.wk-item .frame { height: var(--wk-h); }
+.wk-item figcaption { margin-top: 12px; font-size: 16px; line-height: 1.35; color: var(--muted); }
 .wk-item figcaption strong { color: var(--ink); }
 .wk-rail { height: 8px; margin: 2vh var(--gutter) 0; border-radius: 99px; opacity: 0.35; background: repeating-linear-gradient(90deg, var(--sage) 0 26px, transparent 26px 38px); }
 
@@ -356,6 +364,8 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 @keyframes crawl { 50% { transform: translateX(4px); } }
 .jam-steps { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .jam .fp { stroke: var(--paper); stroke-width: 1.5; }
+.traffic-photo { position: absolute; right: var(--gutter); top: calc(var(--header-h) + 3vh); height: 33vh; aspect-ratio: 1221 / 1243; }
+.traffic-photo .frame { height: 100%; box-shadow: 0 30px 60px rgba(19, 32, 26, 0.2); }
 .headlines { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .headlines article { background: var(--cloud); border-radius: var(--radius); padding: 2.4vh 22px; display: grid; gap: 8px; align-content: start; }
 .headlines article:last-child { background: var(--ink); color: var(--paper); }
@@ -389,7 +399,17 @@ main { position: fixed; top: 0; left: 0; right: 0; will-change: transform; }
 .owner-card h3 { font-size: clamp(22px, 2vw, 36px); }
 .owner-card p:not(.chip) { color: var(--muted); }
 
-/* ---------- 23 Finale --------------------------------------------------------------------------------------- */
+/* ---------- 24 Summary ------------------------------------------------------------------------------------- */
+.summary { gap: 3.4vh; }
+.sum-routes { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vw; }
+.sum-route { display: grid; gap: 1.2vh; align-content: start; padding: 3.4vh 2.4vw 2vh; border-radius: var(--radius); background: rgba(238, 243, 236, 0.05); border: 1px solid rgba(238, 243, 236, 0.12); }
+.sum-route h3 { font-size: clamp(30px, 3.3vw, 60px); letter-spacing: -0.035em; line-height: 1; }
+.sum-route ul { list-style: none; margin-top: 1.4vh; counter-reset: sum; }
+.sum-route li { display: flex; gap: 16px; align-items: baseline; padding: 1.5vh 0; border-top: 1px solid rgba(238, 243, 236, 0.12); font-size: clamp(16px, 1.3vw, 22px); font-weight: 600; letter-spacing: -0.01em; }
+.sum-route li::before { counter-increment: sum; content: "0" counter(sum); font-size: 11px; letter-spacing: 0.2em; color: var(--sage-light); }
+.sum-line { display: flex; align-items: baseline; gap: 20px; font-size: clamp(26px, 2.6vw, 46px); font-weight: 800; letter-spacing: -0.035em; }
+
+/* ---------- 25 Finale --------------------------------------------------------------------------------------- */
 .finale-title { position: absolute; left: 0; right: 0; top: 15vh; z-index: 1; font-size: var(--fs-hero); line-height: 0.86; letter-spacing: -0.05em; text-align: center; white-space: nowrap; }
 .finale-ctas { position: absolute; left: 0; right: 0; bottom: 11vh; display: grid; gap: 8px; justify-items: center; text-align: center; }
 .thanks { font-size: clamp(36px, 4vw, 64px); font-style: italic; line-height: 1; }
@@ -424,12 +444,10 @@ html.is-scroll { height: auto; overflow-x: hidden; overflow-y: auto; overscroll-
 
 /* 1 Opening · 23 Thank you */
 .is-scroll .hero, .is-scroll .finale { min-height: 100svh; justify-content: center; text-align: center; gap: 14px; }
-.is-scroll .hero-eyebrow, .is-scroll .hero-title, .is-scroll .hero-sub, .is-scroll .finale-title, .is-scroll .finale-ctas, .is-scroll .credits { position: static; transform: none; }
+.is-scroll .hero-eyebrow, .is-scroll .hero-title, .is-scroll .finale-title, .is-scroll .finale-ctas, .is-scroll .credits { position: static; transform: none; }
 .is-scroll .hero-title, .is-scroll .finale-title { font-size: min(17vw, 20svh); white-space: normal; line-height: 0.9; }
-.is-scroll .hero-sub { white-space: normal; }
 
 /* 2 Business objective */
-.is-scroll .roots ol { grid-template-columns: 1fr 1fr; }
 .is-scroll .hub { width: min(88%, 480px); height: auto; margin: 8px auto 0; }
 .is-scroll .node b { padding: 6px 11px; font-size: 11px; }
 .is-scroll .node-lead b { padding: 8px 16px; font-size: 14px; }
@@ -449,9 +467,6 @@ html.is-scroll { height: auto; overflow-x: hidden; overflow-y: auto; overscroll-
 /* 5 The brand */
 .is-scroll .brand { display: flex; }
 .is-scroll .brand-ads { width: 100%; }
-.is-scroll .shelf { flex-wrap: wrap; justify-content: center; gap: 18px 4%; }
-.is-scroll .shelf figure { flex: 0 0 29%; }
-.is-scroll .shelf img { height: 72px; }
 
 /* 6 The category: cards in a grid, "And ECCO?" plays over them */
 .is-scroll .wall-head, .is-scroll .wall-cards { position: static; width: auto; }
@@ -470,7 +485,7 @@ html.is-scroll { height: auto; overflow-x: hidden; overflow-y: auto; overscroll-
 .is-scroll .zone-title { position: static; }
 .is-scroll .circles { position: relative; inset: auto; height: min(150vw, 640px); }
 .is-scroll .zc { top: 50%; width: min(46vw, 290px); padding: 16px; }
-.is-scroll .zc span { font-size: 12px; }
+.is-scroll .zc span { display: none; } /* the deck's long circle copy doesn't fit a phone-sized circle */
 .is-scroll .zone-core { top: 50%; }
 .is-scroll .zone-core strong { font-size: clamp(20px, 5.4vw, 34px); }
 .is-scroll .zone-manifesto { position: static; width: auto; transform: none; }
@@ -495,18 +510,18 @@ html.is-scroll { height: auto; overflow-x: hidden; overflow-y: auto; overscroll-
 .is-scroll .uh-end { position: relative; inset: auto; grid-template-columns: 1fr; padding: 0; visibility: visible; }
 .is-scroll .uh-poster { justify-self: stretch; width: 100%; height: auto; }
 
-/* 12 #EccoUnPosted */
+/* 12 #ECCOUnPosted */
 .is-scroll .up-left { flex: none; min-width: 0; }
 .is-scroll .up-cards { height: min(46vw, 300px); margin-left: 4px; } /* four overlapping 9:16 cards fit a 360 px screen */
 .is-scroll .up-card { margin-right: -5vw; }
 .is-scroll .up-formats { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
 .is-scroll .up-format .frame { height: auto; aspect-ratio: 4 / 3; }
 
-/* 13 Practice Club */
+/* 13 Pursuit Club */
 .is-scroll .practice-head { flex-direction: column; align-items: flex-start; }
 .is-scroll .zones { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); height: auto; }
 .is-scroll .zones .tile { min-height: 190px; }
-.is-scroll .steps { grid-template-columns: 1fr 1fr; }
+.is-scroll .steps { grid-template-columns: 1fr; }
 
 /* 14 Spotted */
 .is-scroll .names { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
@@ -519,13 +534,16 @@ html.is-scroll { height: auto; overflow-x: hidden; overflow-y: auto; overscroll-
 .is-scroll .phase .frame { height: auto; aspect-ratio: 16 / 9; }
 
 /* 17 Out of home */
-.is-scroll .wk-item { width: 80vw; }
-.is-scroll .wk-item .frame { height: auto; aspect-ratio: 16 / 9; }
+.is-scroll .wk-head br { display: none; }
+.is-scroll .wk-item { width: calc(45vw * var(--r, 1.777)); }
+.is-scroll .wk-item .frame { height: 45vw; }
 
 /* 18 Traffic */
 .is-scroll .lane { gap: 5px; }
 .is-scroll .lane i { width: 9vw; height: 22px; }
 .is-scroll .headlines { grid-template-columns: 1fr; }
+.is-scroll .traffic-photo { position: static; width: 100%; height: auto; }
+.is-scroll .zones .tile-booth { grid-column: 1 / -1; }
 
 /* 19 One pair: the trip as a photo grid */
 .is-scroll .one-pair { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding: calc(var(--header-h) + 40px) var(--gutter) 64px; }
@@ -543,3 +561,8 @@ html.is-scroll { height: auto; overflow-x: hidden; overflow-y: auto; overscroll-
 .is-scroll .owner-card { grid-template-columns: 1fr; }
 .is-scroll .owner-card { padding: 16px; }
 .is-scroll .owner-card .frame { height: auto; aspect-ratio: 4 / 3; }
+
+/* 23 Summary */
+.is-scroll .sum-routes { grid-template-columns: 1fr; gap: 14px; }
+.is-scroll .sum-route { padding: 22px 18px 10px; }
+.is-scroll .sum-line { flex-wrap: wrap; gap: 6px 16px; }

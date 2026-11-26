@@ -1,6 +1,6 @@
 import { slide } from '../deck.js';
 
-/** 4 · Key USPs: an x-ray scan runs heel → toe across the 3D shoe and back; the five USPs appear as it passes. */
+/** 4 · Key USPs: an x-ray scan runs heel → toe across the 3D shoe and back; the four USPs appear as it passes. */
 export function init({ stage }) {
   slide('shoe', (tl, el) => {
     // Side profile (rotY ≈ 0) so the cut travels heel → toe.
@@ -18,7 +18,7 @@ export function init({ stage }) {
     el.querySelectorAll('.callout').forEach((c, i) => {
       const at = 0.9 + i * 0.55;
       tl.from(c.querySelector('.leader'), { scaleX: 0, duration: 0.5, ease: 'power2.out' }, at)
-        .from(c.querySelectorAll('.num, strong, .desc'), { y: 14, opacity: 0, stagger: 0.08, duration: 0.6, ease: 'power3.out' }, at + 0.15);
+        .from(c.querySelectorAll('.num, strong'), { y: 14, opacity: 0, stagger: 0.08, duration: 0.6, ease: 'power3.out' }, at + 0.15);
     });
     return () => stage?.hide('shoe');
   });
